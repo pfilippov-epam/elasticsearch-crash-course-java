@@ -1,0 +1,1346 @@
+{
+	"info": {
+		"_postman_id": "6f4d8e90-8c38-428b-91a4-040d1e7f5f4e",
+		"name": "elatissearch-course",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Index APIs",
+			"item": [
+				{
+					"name": "aliases",
+					"item": [
+						{
+							"name": "Index aliases",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_alias",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_alias"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search usings alias",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"query\": {\r\n    \"match_all\": {}\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/kibana_sample_data_*/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"kibana_sample_data_*",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add alias",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"actions\": [\r\n    {\r\n      \"add\": {\r\n        \"index\": \"{{index}}\",\r\n        \"alias\": \"{{alias}}\"\r\n      }\r\n    }\r\n  ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/_aliases",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"_aliases"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Remove alias",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"actions\": [\r\n    {\r\n      \"remove\": {\r\n        \"index\": \"{{index}}\",\r\n        \"alias\": \"{{alias}}\"\r\n      }\r\n    }\r\n  ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/_aliases",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"_aliases"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "test-index",
+					"item": [
+						{
+							"name": "Index settings",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_settings",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_settings"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Index mappings",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_mappings",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_mappings"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create index",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"settings\": {\r\n    \"index\": {\r\n      \"number_of_shards\": 4,\r\n      \"number_of_replicas\": 2,\r\n      \"refresh_interval\": \"1s\",\r\n      \"codec\": \"best_compression\",\r\n      \"mapping.total_fields.limit\": 1000\r\n    },\r\n    \"analysis\": {\r\n      \"char_filter\": {},\r\n      \"normalizer\": {\r\n        \"keyword_lowercase\": {\r\n          \"filter\": [\r\n            \"lowercase\"\r\n          ],\r\n          \"type\": \"custom\"\r\n        }\r\n      },\r\n      \"analyzer\": {\r\n        \"source_analyzer\": {\r\n          \"tokenizer\": \"standard\",\r\n          \"filter\": [\r\n            \"lowercase\",\r\n            \"icu_folding\"\r\n          ],\r\n          \"type\": \"custom\"\r\n        }\r\n      },\r\n      \"tokenizer\": {}\r\n    }\r\n  },\r\n  \"mappings\": {\r\n    \"date_detection\": false,\r\n    \"numeric_detection\": false,\r\n    \"_routing\": {\r\n      \"required\": false\r\n    },\r\n    \"properties\": {\r\n      \"id\": {\r\n        \"type\": \"keyword\"\r\n      },\r\n      \"hrid\": {\r\n        \"type\": \"keyword\",\r\n        \"copy_to\": \"sort_hrid\"\r\n      },\r\n      \"source\": {\r\n        \"type\": \"keyword\"\r\n      },\r\n      \"sort_hrid\": {\r\n        \"type\": \"keyword\"\r\n      }\r\n    },\r\n    \"_source\": {\r\n      \"excludes\": [\r\n        \"hrid\"\r\n      ]\r\n    }\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/test-index",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"test-index"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete index",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/test-index",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"test-index"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "monitoring",
+					"item": [
+						{
+							"name": "Stats",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_stats",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_stats"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cluster stats",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{es_url}}/_cluster/stats",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"_cluster",
+										"stats"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Shard stores",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_shard_stores",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_shard_stores"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Segments",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_segments",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_segments"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Fields usage",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_field_usage_stats",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_field_usage_stats"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search shards",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search_shards",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search_shards"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Clear cache",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_cache/clear",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_cache",
+										"clear"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Disk usage",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_disk_usage?run_expensive_tasks=true",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_disk_usage"
+									],
+									"query": [
+										{
+											"key": "run_expensive_tasks",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Close index",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{es_url}}/{{index}}/_close",
+							"host": [
+								"{{es_url}}"
+							],
+							"path": [
+								"{{index}}",
+								"_close"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Open index",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{es_url}}/{{index}}/_open",
+							"host": [
+								"{{es_url}}"
+							],
+							"path": [
+								"{{index}}",
+								"_open"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search by query",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"query\": {\r\n    \"bool\": {\r\n      \"must_not\": [\r\n        {\r\n          \"term\": {\r\n            \"source\": \"MARC\"\r\n          }\r\n        }\r\n      ]\r\n    }\r\n  },\r\n  \"track_total_hits\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{es_url}}/{{index}}/_search",
+							"host": [
+								"{{es_url}}"
+							],
+							"path": [
+								"{{index}}",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete by query",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"query\": {\r\n    \"bool\": {\r\n      \"must_not\": [\r\n        {\r\n          \"term\": {\r\n            \"source\": \"MARC\"\r\n          }\r\n        }\r\n      ]\r\n    }\r\n  },\r\n  \"track_total_hits\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{es_url}}/{{index}}/_delete_by_query",
+							"host": [
+								"{{es_url}}"
+							],
+							"path": [
+								"{{index}}",
+								"_delete_by_query"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list of indices",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{es_url}}/_cat/indices?v",
+							"host": [
+								"{{es_url}}"
+							],
+							"path": [
+								"_cat",
+								"indices"
+							],
+							"query": [
+								{
+									"key": "v",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get document by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{es_url}}/{{index}}/_doc/67ad88d9-d814-429f-92f7-7f852e31c2cf?routing=diku",
+							"host": [
+								"{{es_url}}"
+							],
+							"path": [
+								"{{index}}",
+								"_doc",
+								"67ad88d9-d814-429f-92f7-7f852e31c2cf"
+							],
+							"query": [
+								{
+									"key": "routing",
+									"value": "diku"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete index",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{es_url}}/{{index}}",
+							"host": [
+								"{{es_url}}"
+							],
+							"path": [
+								"{{index}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh index",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{es_url}}/{{index}}/_refresh",
+							"host": [
+								"{{es_url}}"
+							],
+							"path": [
+								"{{index}}",
+								"_refresh"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Search APIs",
+			"item": [
+				{
+					"name": "Term-level queries",
+					"item": [
+						{
+							"name": "Exists",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"query\": {\r\n    \"exists\": {\r\n      \"field\": \"contributors.name\"\r\n    }\r\n  },\r\n  \"_source\": [\r\n    \"contributors.name\"\r\n  ],\r\n  \"track_total_hits\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Wildcard",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"query\": {\r\n    \"wildcard\": {\r\n      \"identifiers.value\": {\r\n        \"value\": \"*ICU*\",\r\n        \"rewrite\": \"constant_score\"\r\n      }\r\n    }\r\n  },\r\n  \"_source\": [\r\n    \"identifiers.value\"\r\n  ],\r\n  \"track_total_hits\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "prefix",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"query\": {\r\n    \"wildcard\": {\r\n      \"identifiers.value\": {\r\n        \"value\": \"(ICU)*\",\r\n        \"rewrite\": \"constant_score\"\r\n      }\r\n    }\r\n  },\r\n  \"_source\": [\r\n    \"identifiers.value\"\r\n  ],\r\n  \"track_total_hits\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Regexp",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"size\": 10,\r\n  \"from\": 0,\r\n  \"query\": {\r\n    \"regexp\": {\r\n      \"identifiers.value\": {\r\n        \"value\": \"[0-9]{4}-[0-9]{3}X\",\r\n         \"flags\": \"ALL\"\r\n      }\r\n    }\r\n  },\r\n  \"_source\": [\r\n    \"identifiers.value\"\r\n  ],\r\n  \"track_total_hits\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Not exists",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"query\": {\r\n    \"bool\": {\r\n      \"should\": [],\r\n      \"must\": [],\r\n      \"filter\": [],\r\n      \"must_not\": [\r\n        {\r\n          \"exists\": {\r\n            \"field\": \"contributors.name\"\r\n          }\r\n        }\r\n      ]\r\n    }\r\n  },\r\n  \"_source\": [\r\n    \"plain_title\",\r\n    \"contributors.name\"\r\n  ],\r\n  \"track_total_hits\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Term",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"query\": {\r\n    \"term\": {\r\n      \"source\": \"MARC\"\r\n    }\r\n  },\r\n  \"_source\": [\r\n    \"source\",\r\n    \"plain_title\",\r\n    \"contributors.name\"\r\n  ],\r\n  \"track_total_hits\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Terms",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"query\": {\r\n    \"terms\": {\r\n      \"languages\": [\"eng\", \"ger\"]\r\n    }\r\n  },\r\n  \"_source\": [\r\n    \"plain_title\",\r\n    \"languages\"\r\n  ],\r\n  \"track_total_hits\": true\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Fuzzy",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"query\": {\r\n    \"fuzzy\": {\r\n      \"languages\": \"enr\"\r\n    }\r\n  },\r\n  \"_source\": [\r\n    \"languages\"\r\n  ],\r\n  \"track_total_hits\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ids",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"query\": {\r\n    \"ids\": {\r\n      \"values\": [\"abf340b1-f537-4b85-b22d-2c5f94e02321\"]\r\n    }\r\n  },\r\n  \"_source\": [\"id\"],\r\n  \"track_total_hits\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Full-text queries",
+					"item": [
+						{
+							"name": "Match all ",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"query\": {\r\n    \"match_all\": {}\r\n  },\r\n  \"track_total_hits\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Match all (sort by title)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"query\": {\r\n    \"match_all\": {}\r\n  },\r\n  \"sort\": [\r\n    {\r\n      \"sort_title\": {\r\n        \"order\": \"desc\",\r\n        \"mode\": \"max\"\r\n      }\r\n    }\r\n  ],\r\n  \"_source\": [\r\n    \"plain_title\",\r\n    \"plain_indexTitle\"\r\n  ],\r\n  \"size\": 20,\r\n  \"from\": 20,\r\n  \"track_total_hits\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Match all (sort by contributors)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"query\": {\r\n    \"match_all\": {}\r\n  },\r\n  \"sort\": [\r\n    {\r\n      \"sort_contributors\": {\r\n        \"order\": \"asc\",\r\n        \"mode\": \"max\"\r\n      }\r\n    }\r\n  ],\r\n  \"_source\": [\r\n    \"contributors.plain_name\"\r\n  ],\r\n  \"size\": 20,\r\n  \"from\": 20,\r\n  \"track_total_hits\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Match phrase",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"query\": {\r\n    \"match_phrase\": {\r\n      \"title.eng\": \"survey of publisher account\"\r\n    }\r\n  },\r\n  \"_source\": [\r\n    \"plain_title\"\r\n  ],\r\n  \"track_total_hits\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Match",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"query\": {\r\n    \"match\": {\r\n      \"title.eng\": {\r\n        \"query\": \"survey of publisher account\"\r\n      }\r\n    }\r\n  },\r\n  \"_source\": [\r\n    \"plain_title\"\r\n  ],\r\n  \"explain\": false,\r\n  \"track_total_hits\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Multi-match",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"query\": {\r\n    \"multi_match\": {\r\n      \"fields\": [\r\n        \"title.*\",\r\n        \"contributors.name\"\r\n      ],\r\n      \"query\": \"e bois\"\r\n    }\r\n  },\r\n  \"_source\": [\r\n    \"plain_title\",\r\n    \"contributors.plain_name\",\r\n    \"languages\"\r\n  ],\r\n  \"track_total_hits\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Multi-match phrase",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"query\": {\r\n    \"multi_match\": {\r\n      \"fields\": [\r\n        \"title.*\",\r\n        \"contributors.name\"\r\n      ],\r\n      \"type\": \"phrase\",\r\n      \"query\": \"butte county\"\r\n    }\r\n  },\r\n  \"_source\": [\r\n    \"plain_title\",\r\n    \"contributors.plain_name\",\r\n    \"languages\"\r\n  ],\r\n  \"track_total_hits\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Query String",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"query\": {\r\n    \"query_string\": {\r\n      \"query\": \"title.eng:new york city OR contributors.name:big apple\",\r\n      \"default_field\": \"content\"\r\n    }\r\n  },\r\n  \"_source\": [\r\n    \"plain_title\",\r\n    \"contributors.plain_name\",\r\n    \"languages\"\r\n  ],\r\n  \"track_total_hits\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "facets",
+					"item": [
+						{
+							"name": "agg by instance format Ids",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"from\": 0,\r\n  \"size\": 0,\r\n  \"query\": {\r\n    \"match_all\": {\r\n      \"boost\": 1.0\r\n    }\r\n  },\r\n  \"_source\": false,\r\n  \"aggregations\": {\r\n    \"instanceFormatIds\": {\r\n      \"terms\": {\r\n        \"field\": \"instanceFormatIds\",\r\n        \"size\": 5,\r\n        \"min_doc_count\": 1,\r\n        \"shard_min_doc_count\": 0,\r\n        \"show_term_doc_count_error\": false,\r\n        \"order\": [\r\n          {\r\n            \"_count\": \"desc\"\r\n          },\r\n          {\r\n            \"_key\": \"asc\"\r\n          }\r\n        ]\r\n      }\r\n    }\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "complex facet query",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"from\": 0,\r\n  \"size\": 0,\r\n  \"query\": {\r\n    \"bool\": {\r\n      \"must\": [\r\n        {\r\n          \"match_all\": {\r\n            \"boost\": 1.0\r\n          }\r\n        }\r\n      ],\r\n      \"adjust_pure_negative\": true,\r\n      \"boost\": 1.0\r\n    }\r\n  },\r\n  \"_source\": false,\r\n  \"aggregations\": {\r\n    \"instanceFormatIds\": {\r\n      \"filter\": {\r\n        \"bool\": {\r\n          \"filter\": [\r\n            {\r\n              \"term\": {\r\n                \"languages\": {\r\n                  \"value\": \"fre\",\r\n                  \"boost\": 1.0\r\n                }\r\n              }\r\n            }\r\n          ],\r\n          \"adjust_pure_negative\": true,\r\n          \"boost\": 1.0\r\n        }\r\n      },\r\n      \"aggregations\": {\r\n        \"values\": {\r\n          \"terms\": {\r\n            \"field\": \"instanceFormatIds\",\r\n            \"size\": 5,\r\n            \"min_doc_count\": 1,\r\n            \"shard_min_doc_count\": 0,\r\n            \"show_term_doc_count_error\": false,\r\n            \"order\": [\r\n              {\r\n                \"_count\": \"desc\"\r\n              },\r\n              {\r\n                \"_key\": \"asc\"\r\n              }\r\n            ]\r\n          }\r\n        }\r\n      }\r\n    },\r\n    \"source\": {\r\n      \"filter\": {\r\n        \"bool\": {\r\n          \"filter\": [\r\n            {\r\n              \"term\": {\r\n                \"languages\": {\r\n                  \"value\": \"fre\",\r\n                  \"boost\": 1.0\r\n                }\r\n              }\r\n            }\r\n          ],\r\n          \"adjust_pure_negative\": true,\r\n          \"boost\": 1.0\r\n        }\r\n      },\r\n      \"aggregations\": {\r\n        \"values\": {\r\n          \"terms\": {\r\n            \"field\": \"source\",\r\n            \"size\": 5,\r\n            \"min_doc_count\": 1,\r\n            \"shard_min_doc_count\": 0,\r\n            \"show_term_doc_count_error\": false,\r\n            \"order\": [\r\n              {\r\n                \"_count\": \"desc\"\r\n              },\r\n              {\r\n                \"_key\": \"asc\"\r\n              }\r\n            ]\r\n          }\r\n        }\r\n      }\r\n    },\r\n    \"languages\": {\r\n      \"terms\": {\r\n        \"field\": \"languages\",\r\n        \"size\": 4,\r\n        \"min_doc_count\": 1,\r\n        \"shard_min_doc_count\": 0,\r\n        \"show_term_doc_count_error\": false,\r\n        \"order\": [\r\n          {\r\n            \"_count\": \"desc\"\r\n          },\r\n          {\r\n            \"_key\": \"asc\"\r\n          }\r\n        ],\r\n        \"exclude\": [\r\n          \"fre\"\r\n        ]\r\n      }\r\n    },\r\n    \"selected_languages\": {\r\n      \"terms\": {\r\n        \"field\": \"languages\",\r\n        \"size\": 1,\r\n        \"min_doc_count\": 1,\r\n        \"shard_min_doc_count\": 0,\r\n        \"show_term_doc_count_error\": false,\r\n        \"order\": [\r\n          {\r\n            \"_count\": \"desc\"\r\n          },\r\n          {\r\n            \"_key\": \"asc\"\r\n          }\r\n        ],\r\n        \"include\": [\r\n          \"fre\"\r\n        ]\r\n      }\r\n    }\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "single facet selected",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"from\": 0,\r\n  \"size\": 0,\r\n  \"query\": {\r\n    \"bool\": {\r\n      \"must\": [\r\n        {\r\n          \"match_all\": {\r\n            \"boost\": 1.0\r\n          }\r\n        }\r\n      ],\r\n      \"adjust_pure_negative\": true,\r\n      \"boost\": 1.0\r\n    }\r\n  },\r\n  \"_source\": false,\r\n  \"aggregations\": {\r\n    \"instanceFormatIds\": {\r\n      \"filter\": {\r\n        \"bool\": {\r\n          \"filter\": [\r\n            {\r\n              \"term\": {\r\n                \"languages\": {\r\n                  \"value\": \"fre\",\r\n                  \"boost\": 1.0\r\n                }\r\n              }\r\n            }\r\n          ],\r\n          \"adjust_pure_negative\": true,\r\n          \"boost\": 1.0\r\n        }\r\n      },\r\n      \"aggregations\": {\r\n        \"values\": {\r\n          \"terms\": {\r\n            \"field\": \"instanceFormatIds\",\r\n            \"size\": 5,\r\n            \"min_doc_count\": 1,\r\n            \"shard_min_doc_count\": 0,\r\n            \"show_term_doc_count_error\": false,\r\n            \"order\": [\r\n              {\r\n                \"_count\": \"desc\"\r\n              },\r\n              {\r\n                \"_key\": \"asc\"\r\n              }\r\n            ]\r\n          }\r\n        }\r\n      }\r\n    },\r\n    \"instanceTags\": {\r\n      \"filter\": {\r\n        \"bool\": {\r\n          \"filter\": [\r\n            {\r\n              \"term\": {\r\n                \"languages\": {\r\n                  \"value\": \"fre\",\r\n                  \"boost\": 1.0\r\n                }\r\n              }\r\n            }\r\n          ],\r\n          \"adjust_pure_negative\": true,\r\n          \"boost\": 1.0\r\n        }\r\n      },\r\n      \"aggregations\": {\r\n        \"values\": {\r\n          \"terms\": {\r\n            \"field\": \"instanceTags\",\r\n            \"size\": 5,\r\n            \"min_doc_count\": 1,\r\n            \"shard_min_doc_count\": 0,\r\n            \"show_term_doc_count_error\": false,\r\n            \"order\": [\r\n              {\r\n                \"_count\": \"desc\"\r\n              },\r\n              {\r\n                \"_key\": \"asc\"\r\n              }\r\n            ]\r\n          }\r\n        }\r\n      }\r\n    },\r\n    \"languages\": {\r\n      \"terms\": {\r\n        \"field\": \"languages\",\r\n        \"size\": 4,\r\n        \"min_doc_count\": 1,\r\n        \"shard_min_doc_count\": 0,\r\n        \"show_term_doc_count_error\": false,\r\n        \"order\": [\r\n          {\r\n            \"_count\": \"desc\"\r\n          },\r\n          {\r\n            \"_key\": \"asc\"\r\n          }\r\n        ],\r\n        \"exclude\": [\r\n          \"fre\"\r\n        ]\r\n      }\r\n    },\r\n    \"selected_languages\": {\r\n      \"terms\": {\r\n        \"field\": \"languages\",\r\n        \"size\": 1,\r\n        \"min_doc_count\": 1,\r\n        \"shard_min_doc_count\": 0,\r\n        \"show_term_doc_count_error\": false,\r\n        \"order\": [\r\n          {\r\n            \"_count\": \"desc\"\r\n          },\r\n          {\r\n            \"_key\": \"asc\"\r\n          }\r\n        ],\r\n        \"include\": [\r\n          \"fre\"\r\n        ]\r\n      }\r\n    }\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search?typed_keys=true",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "typed_keys",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "range facet",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"from\": 0,\r\n  \"size\": 0,\r\n  \"query\": {\r\n    \"match_all\": {\r\n      \"boost\": 1.0\r\n    }\r\n  },\r\n  \"_source\": false,\r\n  \"aggregations\": {\r\n    \"createdBy\": {\r\n      \"range\": {\r\n        \"field\": \"products.base_price\",\r\n        \"ranges\": [\r\n          {\r\n            \"to\": 100\r\n          },\r\n          {\r\n            \"from\": 100\r\n          }\r\n        ]\r\n      }\r\n    }\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search?typed_keys=true",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "typed_keys",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "date histogram",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"from\": 0,\r\n  \"size\": 0,\r\n  \"query\": {\r\n    \"match_all\": {\r\n      \"boost\": 1.0\r\n    }\r\n  },\r\n  \"_source\": false,\r\n  \"aggregations\": {\r\n    \"orders_dates\": {\r\n      \"date_histogram\": {\r\n        \"field\": \"order_date\",\r\n        \"calendar_interval\": \"week\"\r\n      }\r\n    }\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search?typed_keys=true",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "typed_keys",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "date histogram (runtime mappings)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"runtime_mappings\": {\r\n    \"date.day_of_week\": {\r\n      \"type\": \"keyword\",\r\n      \"script\": \"emit(doc['order_date'].value.dayOfWeekEnum.getDisplayName(TextStyle.FULL, Locale.ROOT))\"\r\n    }\r\n  },\r\n  \"size\": 0,\r\n  \"aggs\": {\r\n    \"day_of_week\": {\r\n      \"terms\": {\r\n        \"field\": \"date.day_of_week\",\r\n        \"order\": [\r\n          {\r\n            \"_count\": \"desc\"\r\n          }\r\n        ]\r\n      }\r\n    }\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search?typed_keys=true",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "typed_keys",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "features",
+					"item": [
+						{
+							"name": "MSearch",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{}\r\n{ \"size\":1, \"query\": { \"term\": { \"source\": \"MARC\" } }, \"track_total_hits\": true, \"_source\": [ \"plain_title\", \"source\" ] }\r\n{}\r\n{ \"size\":5, \"query\": { \"term\": { \"hrid\": \"in9888\" } }, \"track_total_hits\": true, \"_source\": [ \"plain_title\", \"hrid\" ] }\r\n",
+									"options": {
+										"raw": {
+											"language": "text"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_msearch",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_msearch"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Suggest by title",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"size\": 0,\r\n  \"_source\": false,\r\n  \"suggest\": {\r\n    \"suggest_title\": {\r\n      \"prefix\": \"ren\",\r\n      \"completion\": {\r\n        \"field\": \"plain_title.completion\",\r\n        \"size\": 5,\r\n        \"skip_duplicates\": true\r\n      }\r\n    }\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Did you mean",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"size\":0,\r\n  \"_source\": false,\r\n  \"suggest\": {\r\n    \"text\": \"e-Boes\",\r\n    \"didyoumean\": {\r\n      \"phrase\": {\r\n        \"field\": \"plain_title.trigram\",\r\n        \"size\": 1,\r\n        \"real_word_error_likelihood\": 1.0,\r\n        \"confidence\": 1.0,\r\n        \"separator\": \" \",\r\n        \"max_errors\": 2.0,\r\n        \"gram_size\": 3,\r\n        \"force_unigrams\": true,\r\n        \"token_limit\": 10,\r\n        \"collate\": {\r\n          \"query\": {\r\n            \"source\": {\r\n              \"bool\": {\r\n                \"filter\": [\r\n                  {\r\n                    \"multi_match\": {\r\n                      \"query\": \"{{suggestion}}\",\r\n                      \"fields\": [\r\n                        \"title.*\"\r\n                      ],\r\n                      \"type\": \"best_fields\",\r\n                      \"operator\": \"OR\",\r\n                      \"slop\": 0,\r\n                      \"prefix_length\": 0,\r\n                      \"max_expansions\": 50,\r\n                      \"zero_terms_query\": \"NONE\",\r\n                      \"auto_generate_synonyms_phrase_query\": true,\r\n                      \"fuzzy_transpositions\": true\r\n                    }\r\n                  }\r\n                ]\r\n              }\r\n            },\r\n            \"lang\": \"mustache\"\r\n          },\r\n          \"prune\": false\r\n        }\r\n      }\r\n    }\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Not found words",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"query\": {\r\n    \"bool\": {\r\n      \"should\": [\r\n        {\r\n          \"multi_match\": {\r\n            \"fields\": [\r\n              \"title.*\",\r\n              \"contributors.name\"\r\n            ],\r\n            \"query\": \"predictions\",\r\n            \"_name\": \"predictions\"\r\n          }\r\n        },\r\n        {\r\n          \"multi_match\": {\r\n            \"fields\": [\r\n              \"title.*\",\r\n              \"contributors.name\"\r\n            ],\r\n            \"query\": \"about\",\r\n            \"_name\": \"about\"\r\n          }\r\n        },\r\n        {\r\n          \"multi_match\": {\r\n            \"fields\": [\r\n              \"title.*\",\r\n              \"contributors.name\"\r\n            ],\r\n            \"query\": \"future\",\r\n            \"_name\": \"future\"\r\n          }\r\n        }\r\n      ]\r\n    }\r\n  },\r\n  \"_source\": [\r\n    \"plain_title\",\r\n    \"contributors.plain_name\"\r\n  ],\r\n  \"track_total_hits\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{es_url}}/{{index}}/_search",
+									"host": [
+										"{{es_url}}"
+									],
+									"path": [
+										"{{index}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
